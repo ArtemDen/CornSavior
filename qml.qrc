@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Scenes/GameScene.qml</file>
+        <file>Objects/Weapon.qml</file>
+        <file>Objects/Aim.qml</file>
+        <file>Objects/Food.qml</file>
+        <file>Widgets/InfoWidget.qml</file>
+        <file>Objects/Environment.qml</file>
+        <file>Widgets/Button.qml</file>
+        <file>Widgets/StyleText.qml</file>
+        <file>Widgets/GameOverWidget.qml</file>
+        <file>Images/aim.svg</file>
+        <file>Images/food.svg</file>
+        <file>Images/hill.svg</file>
+        <file>Images/cloud.svg</file>
+    </qresource>
+</RCC>

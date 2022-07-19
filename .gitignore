@@ -1,0 +1,7 @@
+*.pro.user
+*.pro.user.*
+object_script.*.Release
+object_script.*.Debug
+*.moc
+Makefile*
+*build-*
