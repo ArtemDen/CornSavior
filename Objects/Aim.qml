@@ -45,8 +45,9 @@ Rectangle {
 
         id: imgAim
 
-        smooth: true
+        smooth: false
         visible: false
+        asynchronous: true
 
         source: "../Images/aim.svg"
         sourceSize.width: parent.width

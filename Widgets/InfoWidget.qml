@@ -28,7 +28,7 @@ Column {
         color: "lightgray"
         
         width: windowSize.width / 6.5
-        height: windowSize.height / 25
+        height: windowSize.height / 20
         radius: 15
         
         border.width: 1
@@ -67,7 +67,7 @@ Column {
                 delegate: Food {
                     x: 0
                     y: 0
-                    width: rectFoodCount.width / 13.5
+                    width: rectFoodCount.width / 13
                     opacity: modelData ? 1 : 0.25
                     Component.onCompleted: {
                         //animRotation.stop();
@@ -92,8 +92,8 @@ Column {
             
             x: 0
             y: 0
-            width : windowSize.width / 40
-            height : windowSize.height / 25
+            width : windowSize.width / 35
+            height : width
         }
         
         Text {

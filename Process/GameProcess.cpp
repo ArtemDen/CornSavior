@@ -5,12 +5,13 @@
 //-------------------------------------------------------------------------------------------------
 GameProcess::GameProcess()
 {
-
+  startTimer(ciInterval);
+  connect(this, SIGNAL(sigDeleteObject(int)), this, SLOT(slotDeleteObject(int)), Qt::QueuedConnection);
 }
 //-------------------------------------------------------------------------------------------------
 GameProcess::~GameProcess()
 {
-  _vecObjects.clear();
+  _mapObjects.clear();
 }
 //-------------------------------------------------------------------------------------------------
 void GameProcess::vCreateObject(int iObjType, int iID, double dStartX, double dStartY, int iWidth, int iHeight, double dV0, double dParam)
@@ -40,51 +41,37 @@ void GameProcess::vCreateObject(int iObjType, int iID, double dStartX, double dS
   }
 
   if (poObject) {
-    _vecObjects.push_back(poObject);
-    connect(_vecObjects.back().get(), SIGNAL(sigSendCurrentCoord(int, double, double)), this, SLOT(slotCheckingCross(int, double, double)));
-    connect(_vecObjects.back().get(), SIGNAL(sigSendCurrentCoord(int, double, double)), this, SIGNAL(sigSendCoordToQML(int, double, double)));
+    _mapObjects[iID] = poObject;
+    connect(_mapObjects[iID].get(), SIGNAL(sigSendCurrentCoord(int,double,double)), this, SIGNAL(sigSendCoordToQML(int,double,double)));
   }
 }
 //-------------------------------------------------------------------------------------------------
-void GameProcess::vDeleteObject(int iID)
+void GameProcess::slotDeleteObject(int iID)
 {
-  // Поиск объекта в векторе
-  auto predicate = [iID](const std::shared_ptr<Object>& poObject){
-    return poObject->iGetID() == iID;
-  };
-  auto const& res = std::find_if(_vecObjects.begin(), _vecObjects.end(), predicate);
-
-  // Удаление
-  if (res != _vecObjects.end()) {
-    disconnect(res->get(), SIGNAL(sigSendCurrentCoord(int, double, double)), this, SLOT(slotCheckingCross(int, double, double)));
-    disconnect(res->get(), SIGNAL(sigSendCurrentCoord(int, double, double)), this, SIGNAL(sigSendCoordToQML(int, double, double)));
-    _vecObjects.erase(res);
+  auto it = _mapObjects.find(iID);
+  if (it != _mapObjects.end()) {
+    disconnect(it->second.get(), SIGNAL(sigSendCurrentCoord(int, double, double)), this, SIGNAL(sigSendCoordToQML(int, double, double)));
+    qDebug() << "Удаление: " << iID;
+    _mapObjects.erase(it);
   }
 }
 //-------------------------------------------------------------------------------------------------
-void GameProcess::slotCheckingCross(int ID,  double X, double Y)
+void GameProcess::vCheckingCross(int ID,  double X, double Y)
 {
   Q_UNUSED(X)
   Q_UNUSED(Y)
 
-  // Поиск объекта в векторе
-  auto predicate = [ID](const std::shared_ptr<Object>& poObject){
-    return poObject->iGetID() == ID;
-  };
-  auto const& res = std::find_if(_vecObjects.begin(), _vecObjects.end(), predicate);
-
-  // Проверка на пересечение с существующими орудиями
-  if (res != _vecObjects.end() && res->get()->enGetType() == Const::EnAim) {
-
-    std::shared_ptr<Aim> poAim = std::dynamic_pointer_cast<Aim>(*res);
+  auto it = _mapObjects.find(ID);
+  if (it != _mapObjects.end() && it->second.get()->enGetType() == Const::EnAim) {
+    std::shared_ptr<Aim> poAim = std::dynamic_pointer_cast<Aim>(it->second);
     if (poAim && !poAim->bGetHitSign()) {
-      for (const std::shared_ptr<Object>& croObject : _vecObjects) {
-        if (croObject->enGetType() == Const::EnWeapon && bIsCrossing(*res, croObject)) { // Орудие попало в цель
+      for (const std::pair<const int, std::shared_ptr<Object>>& croPair : _mapObjects) {
+        if (croPair.second->enGetType() == Const::EnWeapon && bIsCrossing(it->second, croPair.second)) { // Орудие попало в цель
           poAim->vSetHitSign(true);
           break;
         }
-        else if (croObject->enGetType() == Const::EnFood && bIsCrossing(*res, croObject)) { // Цель съела еду
-          emit sigFoodIsEaten(croObject->iGetID());
+        else if (croPair.second->enGetType() == Const::EnFood && bIsCrossing(it->second, croPair.second)) { // Цель съела еду
+          emit sigFoodIsEaten(croPair.second->iGetID());
           break;
         }
       }
@@ -110,3 +97,14 @@ bool GameProcess::bIsCrossing(const std::shared_ptr<Object>& croFirstObject, con
   return bIsCrossingLeft && bIsCrossingRight && bIsCrossingUp && bIsCrossingDown;
 }
 //-------------------------------------------------------------------------------------------------
+void GameProcess::timerEvent(QTimerEvent *event)
+{
+  Q_UNUSED(event)
+  qDebug() << "Таймер:" << _mapObjects.size();
+  for (const std::pair<const int, std::shared_ptr<Object>>& croPair : _mapObjects) {
+    qDebug() << "Обновление координат:" << croPair.second.get()->iGetID();
+    croPair.second.get()->slotUpdateCoord();
+    vCheckingCross(croPair.second.get()->iGetID(), croPair.second.get()->croGetCoord().first, croPair.second.get()->croGetCoord().second);
+  }
+}
+//--------------------------------------------------------------------------------------------------

@@ -11,6 +11,9 @@ typedef double y;
 typedef int height;
 typedef int width;
 
+// Интервал таймера
+const int ciInterval = 15;
+
 /** Пространство имен основных констант */
 namespace Const {
 
@@ -72,7 +75,7 @@ signals:
   /** Сигнал, требующий уничтожение объекта */
   void sigToDelete(int ID);
 
-protected slots:
+public slots:
 
   /** Расчет координат на текущий момент времени */
   virtual void slotUpdateCoord();
@@ -84,9 +87,6 @@ protected:
 
   /** Уникальный идентификатор */
   int _iID;
-
-  /** Счетчик объектного времени */
-  QTimer _oTimer;
 
   /** Текущее время, с */
   double _dCurTime;

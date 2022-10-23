@@ -4,8 +4,8 @@
 #include <QGuiApplication>
 #include <QScreen>
 
-// Коэффициент ускорения времени
-const double cdTimeCoeff = 0.9;
+// Коэффициент замедления времени
+const double cdTimeCoeff = 0.8;
 //-------------------------------------------------------------------------------------------------
 Object::Object(int iID, double dStartX, double dStartY, int iWidth, int iHeight, double dV0):
   _enType(Const::EnObject),
@@ -22,21 +22,14 @@ Object::Object(int iID, double dStartX, double dStartY, int iWidth, int iHeight,
 
   _dV0 = dV0;
   _iID = iID;
-  _oTimer.setInterval(5);
-  _oTimer.start();
-
-  connect(&_oTimer, SIGNAL(timeout()), this, SLOT(slotUpdateCoord()));
 }
 //-------------------------------------------------------------------------------------------------
 Object::~Object()
 {
-  if (_oTimer.isActive()) {
-    _oTimer.stop();
-  }
 }
 //-------------------------------------------------------------------------------------------------
 void Object::slotUpdateCoord()
 {
-  _dCurTime += cdTimeCoeff * (_oTimer.interval() / 1000.);
+  _dCurTime += cdTimeCoeff * (ciInterval / 1000.);
 }
 //-------------------------------------------------------------------------------------------------

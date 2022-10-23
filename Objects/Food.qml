@@ -38,8 +38,9 @@ Rectangle {
 
         id: imgFood
 
-        smooth: true
+        smooth: false
         visible: false
+        asynchronous: true
 
         source: "../Images/food.svg"
         sourceSize.width: parent.width

@@ -27,7 +27,7 @@ Rectangle {
             objWeapon.platform = platform;
             objWeapon.line = line
             objWeapon.identifier = globalCounter
-            objWeapon.width = platform.width * 1.7;
+            objWeapon.width = platform.width * 2.;
             objWeapon.x = platform.x + platform.width / 2 - objWeapon.width / 2
             objWeapon.y = platform.y - objWeapon.height / 2
             objWeapon.sigCreateNewWeapon.connect(createWeapon);
@@ -44,7 +44,7 @@ Rectangle {
         if (componentAim.status === Component.Ready) {
             var objAim = componentAim.createObject(rectMainWindow);
             objAim.identifier = globalCounter;
-            objAim.width = parent.width / 28;
+            objAim.width = parent.width / 24;
             objAim.x = parent.width;
             objAim.y = Math.random() * (parent.height - 2.5 * objAim.amplitude) + objAim.amplitude;
             objAim.start();
@@ -62,9 +62,9 @@ Rectangle {
         if (componentFood.status === Component.Ready) {
             var objFood = componentFood.createObject(rectMainWindow);
             objFood.identifier = globalCounter;
-            objFood.width = parent.width / 40
+            objFood.width = parent.width / 35
             objFood.x = Math.random() * parent.width / 2 + parent.width / 3
-            objFood.y = Math.random() * parent.height / 1.5 + 5 * objFood.height
+            objFood.y = Math.random() * parent.height / 1.5 + 3 * objFood.height
             objFood.start();
             objFood.sigCreateNewFood.connect(createFood);
             arrObjects.push(objFood);
@@ -74,7 +74,7 @@ Rectangle {
 
     // Уничтожение объекта
     function deleteObj(identifier) {
-        GameProcess.vDeleteObject(identifier);
+        GameProcess.sigDeleteObject(identifier);
         arrObjects[identifier].destroy();
         arrObjects[identifier] = 0;
     }
@@ -98,7 +98,7 @@ Rectangle {
         infoWidget.z = 1;
         for (let i = 0; i <= arrObjects.length; i++) {
             if (arrObjects[i]) {
-                GameProcess.vDeleteObject(i);
+                GameProcess.sigDeleteObject(i);
                 //arrObjects[i].destroy();
 
                 switch(arrObjects[i].type) {
@@ -176,23 +176,15 @@ Rectangle {
         renderStrategy: Canvas.Threaded
 
         onPaint: {
-            var ctx = getContext("2d");
-            ctx.reset();
-            ctx.strokeStyle = "lightgray";
-            //ctx.setLineDash([3, 3]);
-            ctx.beginPath();
-            ctx.moveTo(weapon.x + weapon.width / 2, weapon.y + weapon.height / 2);
-            ctx.lineTo(platform.x + platform.width / 2, platform.y - 1);
-            ctx.stroke();
+            //var ctx = getContext("2d");
+            //ctx.reset();
+            //ctx.strokeStyle = "lightgray";
+            ////ctx.setLineDash([3, 3]);
+            //ctx.beginPath();
+            //ctx.moveTo(weapon.x + weapon.width / 2, weapon.y + weapon.height / 2);
+            //ctx.lineTo(platform.x + platform.width / 2, platform.y - 1);
+            //ctx.stroke();
         }
-
-//        layer.enabled: true
-//        layer.effect: DropShadow {
-//            radius: 3
-//            samples: 10
-//            color: "gray"
-//            verticalOffset: 5
-//        }
     }
 
     // Отображение информации
@@ -202,7 +194,7 @@ Rectangle {
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
-        anchors.topMargin: 50
+        anchors.topMargin: parent.height / 15
 
         windowSize: rectMainWindow
         model: arrFood
