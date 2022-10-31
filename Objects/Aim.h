@@ -26,7 +26,7 @@ public:
 protected slots:
 
   /** Расчет координат на текущий момент времени */
-  void slotUpdateCoord() override;
+  void vUpdateCoord() override;
 
 private:
 

@@ -8,13 +8,11 @@ Food::Food(int iID, double dStartX, double dStartY, int iWidth, int iHeight, dou
   _enType = Const::EnFood;
 }
 //-------------------------------------------------------------------------------------------------
-void Food::slotUpdateCoord()
+void Food::vUpdateCoord()
 {
-  Object::slotUpdateCoord();
+  Object::vUpdateCoord();
 
   // "Колебание"
   _oCurCoord.second = _oStartCoord.second + 0.25 * _oSize.second * sin(10 * _dCurTime) ;
-
-  emit sigSendCurrentCoord(_iID, _oCurCoord.first, _oCurCoord.second);
 }
 //-------------------------------------------------------------------------------------------------

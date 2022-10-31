@@ -16,7 +16,6 @@ Rectangle {
 
     // Массив орудий
     property variant arrObjects: []
-    property variant arrFood: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     property int globalCounter: 0
 
     // Создание нового объекта орудия
@@ -44,7 +43,7 @@ Rectangle {
         if (componentAim.status === Component.Ready) {
             var objAim = componentAim.createObject(rectMainWindow);
             objAim.identifier = globalCounter;
-            objAim.width = parent.width / 24;
+            objAim.width = parent.width / 20;
             objAim.x = parent.width;
             objAim.y = Math.random() * (parent.height - 2.5 * objAim.amplitude) + objAim.amplitude;
             objAim.start();
@@ -62,9 +61,9 @@ Rectangle {
         if (componentFood.status === Component.Ready) {
             var objFood = componentFood.createObject(rectMainWindow);
             objFood.identifier = globalCounter;
-            objFood.width = parent.width / 35
+            objFood.width = parent.width / 30
             objFood.x = Math.random() * parent.width / 2 + parent.width / 3
-            objFood.y = Math.random() * parent.height / 1.5 + 3 * objFood.height
+            objFood.y = Math.random() * parent.height / 1.5 + 2 * objFood.height
             objFood.start();
             objFood.sigCreateNewFood.connect(createFood);
             arrObjects.push(objFood);
@@ -127,8 +126,8 @@ Rectangle {
 
         id: platform
 
-        width: parent.width / 55
-        height: parent.height / 4.5
+        width: parent.width / 47.5
+        height: parent.height / 4
         radius: width
 
         gradient: "JuicyPeach"
@@ -136,7 +135,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0.25 * height
         anchors.left: parent.left
-        anchors.leftMargin: width * 7
+        anchors.leftMargin: width * 6
 
         layer.enabled: true
         layer.effect: DropShadow {
@@ -197,7 +196,6 @@ Rectangle {
         anchors.topMargin: parent.height / 15
 
         windowSize: rectMainWindow
-        model: arrFood
     }
 
     // Виджет окончания игры
@@ -222,14 +220,14 @@ Rectangle {
         function onSigFoodIsEaten(ID) {
             deleteObj(ID);
             createFood();
-            for (var i = arrFood.length - 1; i >= 0; i--) {
-                if (arrFood[i] === 1) {
-                    arrFood[i] = 0;
-                    infoWidget.model = arrFood;
+            for (var i = infoWidget.cornCounter.count - 1; i >= 0; i--) {
+                if (infoWidget.cornCounter.itemAt(i).opacity === 1) {
+                    infoWidget.cornCounter.itemAt(i).opacity = 0.25;
+                    //infoWidget.model = arrFood;
                     if (i === 0) {
                        gameover();
                     }
-                    return;
+                    break;
                 }
             }
         }
@@ -239,18 +237,20 @@ Rectangle {
         target: gameoverWidget
         function onSigRestart() {
 
-            for (let i = 0; i <= arrObjects.length; i++) {
+            for (var i = 0; i <= arrObjects.length; i++) {
                 if (arrObjects[i]) {
                     arrObjects[i].destroy();
                 }
             }
-
             arrObjects = [];
-            arrFood = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+
+            for (var j = infoWidget.cornCounter.count - 1; j >= 0; j--) {
+                infoWidget.cornCounter.itemAt(j).opacity = 1;
+            }
+
             globalCounter = 0;
 
             infoWidget.aimCount = 0;
-            infoWidget.model = arrFood;
             init();
         }
     }

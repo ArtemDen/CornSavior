@@ -42,7 +42,6 @@ void GameProcess::vCreateObject(int iObjType, int iID, double dStartX, double dS
 
   if (poObject) {
     _mapObjects[iID] = poObject;
-    connect(_mapObjects[iID].get(), SIGNAL(sigSendCurrentCoord(int,double,double)), this, SIGNAL(sigSendCoordToQML(int,double,double)));
   }
 }
 //-------------------------------------------------------------------------------------------------
@@ -50,8 +49,6 @@ void GameProcess::slotDeleteObject(int iID)
 {
   auto it = _mapObjects.find(iID);
   if (it != _mapObjects.end()) {
-    disconnect(it->second.get(), SIGNAL(sigSendCurrentCoord(int, double, double)), this, SIGNAL(sigSendCoordToQML(int, double, double)));
-    qDebug() << "Удаление: " << iID;
     _mapObjects.erase(it);
   }
 }
@@ -100,11 +97,10 @@ bool GameProcess::bIsCrossing(const std::shared_ptr<Object>& croFirstObject, con
 void GameProcess::timerEvent(QTimerEvent *event)
 {
   Q_UNUSED(event)
-  qDebug() << "Таймер:" << _mapObjects.size();
   for (const std::pair<const int, std::shared_ptr<Object>>& croPair : _mapObjects) {
-    qDebug() << "Обновление координат:" << croPair.second.get()->iGetID();
-    croPair.second.get()->slotUpdateCoord();
+    croPair.second.get()->vUpdateCoord();
     vCheckingCross(croPair.second.get()->iGetID(), croPair.second.get()->croGetCoord().first, croPair.second.get()->croGetCoord().second);
+    emit sigSendCoordToQML(croPair.first, croPair.second->croGetCoord().first, croPair.second->croGetCoord().second);
   }
 }
 //--------------------------------------------------------------------------------------------------

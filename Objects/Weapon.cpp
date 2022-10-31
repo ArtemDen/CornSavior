@@ -9,14 +9,12 @@ Weapon::Weapon(int iID, double dStartX, double dStartY, int iWidth, int iHeight,
   _dAlpha0 = dAlpha0;
 }
 //-------------------------------------------------------------------------------------------------
-void Weapon::slotUpdateCoord()
+void Weapon::vUpdateCoord()
 {
-  Object::slotUpdateCoord();
+  Object::vUpdateCoord();
 
   // Бросание под углом к горизонту
   _oCurCoord.first = _oStartCoord.first + _dV0 * cos(_dAlpha0) * _dCurTime;
   _oCurCoord.second = _oStartCoord.second - _dV0 * sin(_dAlpha0) * _dCurTime + 0.5 * _cdCoeffG * pow(_dCurTime, 2);
-
-  emit sigSendCurrentCoord(_iID, _oCurCoord.first, _oCurCoord.second);
 }
 //-------------------------------------------------------------------------------------------------

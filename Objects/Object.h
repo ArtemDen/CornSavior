@@ -12,7 +12,7 @@ typedef int height;
 typedef int width;
 
 // Интервал таймера
-const int ciInterval = 15;
+const int ciInterval = 20;
 
 /** Пространство имен основных констант */
 namespace Const {
@@ -67,18 +67,13 @@ public:
     return _dV0;
   }
 
-signals:
+  /** Расчет координат на текущий момент времени */
+  virtual void vUpdateCoord();
 
-  /** Отправить текущее значение координат */
-  void sigSendCurrentCoord(int ID, double X, double Y);
+signals:
 
   /** Сигнал, требующий уничтожение объекта */
   void sigToDelete(int ID);
-
-public slots:
-
-  /** Расчет координат на текущий момент времени */
-  virtual void slotUpdateCoord();
 
 protected:
 

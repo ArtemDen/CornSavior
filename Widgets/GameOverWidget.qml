@@ -32,6 +32,12 @@ Rectangle {
         color: "lightgray"
         opacity: 0.65
     }
+
+    // Шрифт
+    FontLoader {
+        id: fontCustom
+        source: "../fonts/comic.ttf"
+    }
     
     StyleText {
 
@@ -39,8 +45,8 @@ Rectangle {
 
         anchors.centerIn: parent
         textString: qsTr("GAME OVER")
-        fontName: "Comic Sans MS"
-        fontSize: parent.height / 10
+        fontName: fontCustom.name
+        fontSize: parent.height / 6
     }
 
     NumberAnimation on y {
@@ -63,14 +69,14 @@ Rectangle {
 
         text: qsTr("Restart");
 
-        height: parent.height / 15
-        width: parent.width / 9
+        height: parent.height / 10
+        width: parent.width / 5
         radius: height
         fontSize: width / 5
 
         anchors.horizontalCenter: gameoverText.horizontalCenter
         anchors.top: gameoverText.bottom
-        anchors.topMargin: 100
+        anchors.topMargin: 50
 
         onClicked: {
             sigRestart();

@@ -28,7 +28,7 @@ Object::~Object()
 {
 }
 //-------------------------------------------------------------------------------------------------
-void Object::slotUpdateCoord()
+void Object::vUpdateCoord()
 {
   _dCurTime += cdTimeCoeff * (ciInterval / 1000.);
 }

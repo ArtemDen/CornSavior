@@ -17,7 +17,7 @@ Row {
 
         id: sun
 
-        height: rectMainWindow.height / 10
+        height: rectMainWindow.height / 8
         width: height
         radius: height
 

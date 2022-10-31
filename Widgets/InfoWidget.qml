@@ -15,8 +15,9 @@ Column {
     property variant windowSize: 0
     property alias model: repeater.model
     property alias aimCount: rowAimCount.aimCount
+    property alias cornCounter: repeater
     
-    spacing: 20
+    spacing: 10
     
     // Счетчик еды
     Rectangle {
@@ -27,8 +28,8 @@ Column {
         
         color: "lightgray"
         
-        width: windowSize.width / 6.5
-        height: windowSize.height / 20
+        width: windowSize.width / 5
+        height: windowSize.height / 17
         radius: 15
         
         border.width: 1
@@ -62,13 +63,13 @@ Column {
                 id: repeater
                 
                 anchors.fill: parent
-                model: arrFood
+                model: 10
                 
                 delegate: Food {
                     x: 0
                     y: 0
                     width: rectFoodCount.width / 13
-                    opacity: modelData ? 1 : 0.25
+                    opacity: 1
                     Component.onCompleted: {
                         //animRotation.stop();
                         animOpacity.stop();
@@ -92,13 +93,19 @@ Column {
             
             x: 0
             y: 0
-            width : windowSize.width / 35
+            width : windowSize.width / 25
             height : width
+        }
+
+        // Шрифт
+        FontLoader {
+            id: fontCustom
+            source: "../fonts/comic.ttf"
         }
         
         Text {
             anchors.verticalCenter: imageAim.verticalCenter
-            font.family: "Comic Sans MS"
+            font.family: fontCustom.name
             font.pointSize: imageAim.width / 2.5
             font.bold: true
             color: "black"

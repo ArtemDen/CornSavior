@@ -20,13 +20,19 @@ Rectangle {
     // Сигнал нажатия
     signal clicked()
 
+    // Шрифт
+    FontLoader {
+        id: fontCustom
+        source: "../fonts/comic.ttf"
+    }
+
     // Текст кнопки
     Text {
 
         id: textButton
 
         anchors.centerIn: parent
-        font.family: "Comic Sans MS"
+        font.family: fontCustom.name
         font.pointSize: parent.width / 1.5
         font.bold: true
         text: qsTr("text")

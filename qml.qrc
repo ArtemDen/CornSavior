@@ -14,5 +14,9 @@
         <file>Images/food.svg</file>
         <file>Images/hill.svg</file>
         <file>Images/cloud.svg</file>
+        <file>fonts/comic.ttf</file>
+        <file>fonts/comicbd.ttf</file>
+        <file>fonts/comici.ttf</file>
+        <file>fonts/comicz.ttf</file>
     </qresource>
 </RCC>

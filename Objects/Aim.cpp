@@ -11,9 +11,9 @@ Aim::Aim(int iID, double dStartX, double dStartY, int iWidth, int iHeight, doubl
   _enType = Const::EnAim;
 }
 //-------------------------------------------------------------------------------------------------
-void Aim::slotUpdateCoord()
+void Aim::vUpdateCoord()
 {
-  Object::slotUpdateCoord();
+  Object::vUpdateCoord();
   double dAttenuationCoeff = 0.05;
 
   if (!_bIsHit) { // Двжиение
@@ -24,6 +24,5 @@ void Aim::slotUpdateCoord()
     _oCurCoord.first += 5 * sin(50 * _dCurTime) ;
     _oCurCoord.second += dAttenuationCoeff * _cdCoeffG * pow(_dCurTime, 2);
   }
-  emit sigSendCurrentCoord(_iID, _oCurCoord.first, _oCurCoord.second);
 }
 //-------------------------------------------------------------------------------------------------
